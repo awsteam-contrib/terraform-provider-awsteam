@@ -1,6 +1,7 @@
 module github.com/brittandeyoung/terraform-provider-awsteam
 
 go 1.21
+toolchain go1.23.7
 
 require (
 	github.com/YakDriver/regexache v0.23.0
@@ -14,7 +15,7 @@ require (
 	github.com/hashicorp/terraform-plugin-log v0.9.0
 	github.com/hashicorp/terraform-plugin-testing v1.7.0
 	github.com/hasura/go-graphql-client v0.12.1
-	golang.org/x/oauth2 v0.18.0
+	golang.org/x/oauth2 v0.28.0
 )
 
 require (
