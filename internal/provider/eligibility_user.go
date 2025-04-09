@@ -28,6 +28,7 @@ const (
 
 var _ resource.Resource = &EligibilityUserResource{}
 var _ resource.ResourceWithImportState = &EligibilityUserResource{}
+var _ resource.ResourceWithValidateConfig = &EligibilityUserResource{}
 
 func NewEligibilityUserResource() resource.Resource {
 	return &EligibilityUserResource{}
@@ -112,6 +113,21 @@ func (r *EligibilityUserResource) Schema(ctx context.Context, req resource.Schem
 	}
 }
 
+func (r *EligibilityUserResource) ValidateConfig(ctx context.Context, req resource.ValidateConfigRequest, resp *resource.ValidateConfigResponse) {
+	var config EligibilityUserModel
+	resp.Diagnostics.Append(req.Config.Get(ctx, &config)...)
+	if resp.Diagnostics.HasError() {
+		return
+	}
+
+	if len(config.Accounts.Elements()) == 0 && len(config.OUs.Elements()) == 0 {
+		resp.Diagnostics.AddError(
+			"At Least One Account or OU Must Be Specified.",
+			"Either 'Accounts' or 'OUs' must have at least one element. Both cannot be empty.",
+		)
+	}
+}
+
 func (r *EligibilityUserResource) Configure(ctx context.Context, req resource.ConfigureRequest, resp *resource.ConfigureResponse) {
 	if req.ProviderData == nil {
 		return
@@ -189,7 +205,7 @@ func (r *EligibilityUserResource) Create(ctx context.Context, req resource.Creat
 		return
 	}
 
-	diags := data.flatten(out.Eligibility)
+	diags := data.flatten(data, out.Eligibility)
 
 	resp.Diagnostics.Append(diags...)
 	if resp.Diagnostics.HasError() {
@@ -231,7 +247,7 @@ func (r *EligibilityUserResource) Read(ctx context.Context, req resource.ReadReq
 		return
 	}
 
-	diags := data.flatten(out.Eligibility)
+	diags := data.flatten(data, out.Eligibility)
 
 	resp.Diagnostics.Append(diags...)
 	if resp.Diagnostics.HasError() {
@@ -318,7 +334,7 @@ func (r *EligibilityUserResource) Update(ctx context.Context, req resource.Updat
 			return
 		}
 
-		diags := plan.flatten(out.Eligibility)
+		diags := plan.flatten(config, out.Eligibility)
 
 		resp.Diagnostics.Append(diags...)
 		if resp.Diagnostics.HasError() {
@@ -357,7 +373,7 @@ func (r *EligibilityUserResource) ImportState(ctx context.Context, req resource.
 	resource.ImportStatePassthroughID(ctx, path.Root("id"), req, resp)
 }
 
-func (d *EligibilityUserModel) flatten(out *awsteam.Eligibility) diag.Diagnostics {
+func (d *EligibilityUserModel) flatten(config EligibilityUserModel, out *awsteam.Eligibility) diag.Diagnostics {
 	var diags diag.Diagnostics
 
 	accountsSet, diags := flattenEligibilityAccounts(out.Accounts)
@@ -381,8 +397,12 @@ func (d *EligibilityUserModel) flatten(out *awsteam.Eligibility) diag.Diagnostic
 	d.Id = types.StringPointerValue(out.Id)
 	d.UserName = types.StringPointerValue(out.Name)
 	d.UserId = types.StringPointerValue(out.Id)
-	d.Accounts = accountsSet
-	d.OUs = ousSet
+	if !config.Accounts.IsNull() || len(accountsSet.Elements()) != 0 {
+		d.Accounts = accountsSet
+	}
+	if !config.OUs.IsNull() || len(ousSet.Elements()) != 0 {
+		d.OUs = ousSet
+	}
 	d.Permissions = permissionsSet
 	d.ApprovalRequired = types.BoolPointerValue(out.ApprovalRequired)
 	d.Duration = types.Int64PointerValue(out.Duration)
