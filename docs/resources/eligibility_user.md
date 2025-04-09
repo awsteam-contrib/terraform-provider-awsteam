@@ -4,11 +4,13 @@ page_title: "awsteam_eligibility_user Resource - terraform-provider-awsteam"
 subcategory: ""
 description: |-
   Allows configuration of eligibility policies for an aws iam identity center user account within an AWS TEAM deployment.
+  > NOTE: The ous and accounts fields are labeled as Optional; however, at least one ou or account must be provided.
 ---
 
 # awsteam_eligibility_user (Resource)
 
 Allows configuration of eligibility policies for an aws iam identity center user account within an AWS TEAM deployment.
+> **NOTE:** The `ous` and `accounts` fields are labeled as *Optional*; however, at least one `ou` or `account` must be provided.
 
 ## Example Usage
 
@@ -44,16 +46,16 @@ resource "awsteam_eligibility_user" "example" {
 
 ### Required
 
-- `accounts` (Attributes Set) A list of AWS accounts the eligibility will apply to. (see [below for nested schema](#nestedatt--accounts))
 - `approval_required` (Boolean) Determines if approval is required for elevated access
 - `duration` (Number) The maximum elevated access request duration in hours.
-- `ous` (Attributes Set) A list of AWS OUs the eligibility will apply to. (see [below for nested schema](#nestedatt--ous))
 - `permissions` (Attributes Set) A list of AWS permission sets for the eligibility policy. (see [below for nested schema](#nestedatt--permissions))
 - `user_id` (String) Id of the AWS iam identity center user the eligibility policy will be applied to.
 - `user_name` (String) Name of the AWS iam identity center user the eligibility policy will be applied to.
 
 ### Optional
 
+- `accounts` (Attributes Set) A list of AWS accounts the eligibility will apply to. Either 'Accounts' or 'OUs' must have at least one element. Both cannot be empty. (see [below for nested schema](#nestedatt--accounts))
+- `ous` (Attributes Set) A list of AWS OUs the eligibility will apply to. Either 'Accounts' or 'OUs' must have at least one element. Both cannot be empty. (see [below for nested schema](#nestedatt--ous))
 - `ticket_no` (String) The Change Management system ticket system number.
 
 ### Read-Only
@@ -62,6 +64,15 @@ resource "awsteam_eligibility_user" "example" {
 - `id` (String) The UUID of the eligibility.
 - `modified_by` (String) The user to last modify the item
 - `updated_at` (String) The date and time of the last time the item was updated
+
+<a id="nestedatt--permissions"></a>
+### Nested Schema for `permissions`
+
+Required:
+
+- `permission_arn` (String) The ARN of the permission for the eligibility policy. This needs to match the ARN of the name provided in name.
+- `permission_name` (String) Name of the permission for the eligibility policy. This needs to match the name of the ARN provided in ARN.
+
 
 <a id="nestedatt--accounts"></a>
 ### Nested Schema for `accounts`
@@ -79,15 +90,6 @@ Required:
 
 - `ou_id` (String) Id of the OU the eligibility policy will be applied to. This needs to match the id of the name provided in ou_name.
 - `ou_name` (String) Name of the OU the eligibility policy will be applied to. This needs to match the name of the id provided in ou_id.
-
-
-<a id="nestedatt--permissions"></a>
-### Nested Schema for `permissions`
-
-Required:
-
-- `permission_arn` (String) The ARN of the permission for the eligibility policy. This needs to match the ARN of the name provided in name.
-- `permission_name` (String) Name of the permission for the eligibility policy. This needs to match the name of the ARN provided in ARN.
 
 ## Import
 
