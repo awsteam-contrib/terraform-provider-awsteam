@@ -44,7 +44,7 @@ type EligibilityPermission struct {
 func AccountAttributeSet() schema.SetNestedAttribute {
 	return schema.SetNestedAttribute{
 		MarkdownDescription: "A list of AWS accounts the eligibility will apply to.",
-		Required:            true,
+		Optional:            true,
 		NestedObject: schema.NestedAttributeObject{
 			Attributes: map[string]schema.Attribute{
 				"account_id": schema.StringAttribute{
@@ -75,7 +75,7 @@ func AccountAttributeSet() schema.SetNestedAttribute {
 func OUAttributeSet() schema.SetNestedAttribute {
 	return schema.SetNestedAttribute{
 		MarkdownDescription: "A list of AWS OUs the eligibility will apply to.",
-		Required:            true,
+		Optional:            true,
 		NestedObject: schema.NestedAttributeObject{
 			Attributes: map[string]schema.Attribute{
 				"ou_id": schema.StringAttribute{
