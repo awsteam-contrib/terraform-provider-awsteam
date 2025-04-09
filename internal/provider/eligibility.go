@@ -12,8 +12,9 @@ import (
 )
 
 const (
-	accountsAndOUsRequiredMessageSummary = "At Least One Account or OU Must Be Specified."
-	accountsAndOUsRequiredMessageDetail  = "Either 'Accounts' or 'OUs' must have at least one element. Both cannot be empty."
+	accountsAndOUsRequiredMessageSummary  = "At Least One Account or OU Must Be Specified."
+	accountsAndOUsRequiredMessageDetail   = "Either 'Accounts' or 'OUs' must have at least one element. Both cannot be empty."
+	accountsAndOUsRequiredMessageMarkdown = "\n> **NOTE:** The `ous` and `accounts` fields are labeled as *Optional*; however, at least one `ou` or `account` must be provided."
 )
 
 var (

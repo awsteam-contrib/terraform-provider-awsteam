@@ -59,7 +59,8 @@ func (r *EligibilityGroupResource) Metadata(ctx context.Context, req resource.Me
 
 func (r *EligibilityGroupResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
-		MarkdownDescription: "Allows configuration of eligibility policies for an aws iam identity center group account within an AWS TEAM deployment.",
+		MarkdownDescription: "Allows configuration of eligibility policies for an aws iam identity center group account within an AWS TEAM deployment." +
+			accountsAndOUsRequiredMessageMarkdown,
 
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
@@ -122,8 +123,8 @@ func (r *EligibilityGroupResource) ValidateConfig(ctx context.Context, req resou
 
 	if len(config.Accounts.Elements()) == 0 && len(config.OUs.Elements()) == 0 {
 		resp.Diagnostics.AddError(
-			"At Least One Account or OU Must Be Specified.",
-			"Either 'Accounts' or 'OUs' must have at least one element. Both cannot be empty.",
+			accountsAndOUsRequiredMessageSummary,
+			accountsAndOUsRequiredMessageDetail,
 		)
 	}
 }
