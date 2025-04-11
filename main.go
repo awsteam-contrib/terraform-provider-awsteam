@@ -5,7 +5,7 @@ import (
 	"flag"
 	"log"
 
-	"github.com/brittandeyoung/terraform-provider-awsteam/internal/provider"
+	"github.com/awsteam-contrib/terraform-provider-awsteam/internal/provider"
 	"github.com/hashicorp/terraform-plugin-framework/providerserver"
 )
 
@@ -35,8 +35,7 @@ func main() {
 	flag.Parse()
 
 	opts := providerserver.ServeOpts{
-		// TODO: Update this string with the published name of your provider.
-		Address: "registry.terraform.io/brittandeyoung/awsteam",
+		Address: "registry.terraform.io/awsteam-contrib/awsteam",
 		Debug:   debug,
 	}
 

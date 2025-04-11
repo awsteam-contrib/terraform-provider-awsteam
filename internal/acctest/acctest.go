@@ -6,8 +6,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/brittandeyoung/terraform-provider-awsteam/internal/envvar"
-	"github.com/brittandeyoung/terraform-provider-awsteam/internal/sdk/awsteam"
+	"github.com/awsteam-contrib/terraform-provider-awsteam/internal/envvar"
+	"github.com/awsteam-contrib/terraform-provider-awsteam/internal/sdk/awsteam"
 )
 
 // These two functions come form the terraform-provider-aws code
