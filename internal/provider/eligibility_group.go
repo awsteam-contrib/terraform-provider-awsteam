@@ -28,6 +28,7 @@ const (
 
 var _ resource.Resource = &EligibilityGroupResource{}
 var _ resource.ResourceWithImportState = &EligibilityGroupResource{}
+var _ resource.ResourceWithValidateConfig = &EligibilityGroupResource{}
 
 func NewEligibilityGroupResource() resource.Resource {
 	return &EligibilityGroupResource{}
@@ -58,7 +59,8 @@ func (r *EligibilityGroupResource) Metadata(ctx context.Context, req resource.Me
 
 func (r *EligibilityGroupResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
-		MarkdownDescription: "Allows configuration of eligibility policies for an aws iam identity center group account within an AWS TEAM deployment.",
+		MarkdownDescription: "Allows configuration of eligibility policies for an aws iam identity center group account within an AWS TEAM deployment." +
+			accountsAndOUsRequiredMessageMarkdown,
 
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
@@ -109,6 +111,21 @@ func (r *EligibilityGroupResource) Schema(ctx context.Context, req resource.Sche
 			names.AttrCreatedAt:     CreatedAtAttribute(),
 			names.AttrUpdatedAt:     UpdatedAtAttribute(),
 		},
+	}
+}
+
+func (r *EligibilityGroupResource) ValidateConfig(ctx context.Context, req resource.ValidateConfigRequest, resp *resource.ValidateConfigResponse) {
+	var config EligibilityGroupModel
+	resp.Diagnostics.Append(req.Config.Get(ctx, &config)...)
+	if resp.Diagnostics.HasError() {
+		return
+	}
+
+	if len(config.Accounts.Elements()) == 0 && len(config.OUs.Elements()) == 0 {
+		resp.Diagnostics.AddError(
+			accountsAndOUsRequiredMessageSummary,
+			accountsAndOUsRequiredMessageDetail,
+		)
 	}
 }
 
@@ -189,7 +206,7 @@ func (r *EligibilityGroupResource) Create(ctx context.Context, req resource.Crea
 		return
 	}
 
-	diags := data.flatten(out.Eligibility)
+	diags := data.flatten(data, out.Eligibility)
 
 	resp.Diagnostics.Append(diags...)
 	if resp.Diagnostics.HasError() {
@@ -231,7 +248,7 @@ func (r *EligibilityGroupResource) Read(ctx context.Context, req resource.ReadRe
 		return
 	}
 
-	diags := data.flatten(out.Eligibility)
+	diags := data.flatten(data, out.Eligibility)
 
 	resp.Diagnostics.Append(diags...)
 	if resp.Diagnostics.HasError() {
@@ -318,7 +335,7 @@ func (r *EligibilityGroupResource) Update(ctx context.Context, req resource.Upda
 			return
 		}
 
-		diags := plan.flatten(out.Eligibility)
+		diags := plan.flatten(config, out.Eligibility)
 
 		resp.Diagnostics.Append(diags...)
 		if resp.Diagnostics.HasError() {
@@ -357,7 +374,7 @@ func (r *EligibilityGroupResource) ImportState(ctx context.Context, req resource
 	resource.ImportStatePassthroughID(ctx, path.Root("id"), req, resp)
 }
 
-func (d *EligibilityGroupModel) flatten(out *awsteam.Eligibility) diag.Diagnostics {
+func (d *EligibilityGroupModel) flatten(config EligibilityGroupModel, out *awsteam.Eligibility) diag.Diagnostics {
 	var diags diag.Diagnostics
 
 	accountsSet, diags := flattenEligibilityAccounts(out.Accounts)
@@ -381,8 +398,12 @@ func (d *EligibilityGroupModel) flatten(out *awsteam.Eligibility) diag.Diagnosti
 	d.Id = types.StringPointerValue(out.Id)
 	d.GroupName = types.StringPointerValue(out.Name)
 	d.GroupId = types.StringPointerValue(out.Id)
-	d.Accounts = accountsSet
-	d.OUs = ousSet
+	if !config.Accounts.IsNull() || len(accountsSet.Elements()) != 0 {
+		d.Accounts = accountsSet
+	}
+	if !config.OUs.IsNull() || len(ousSet.Elements()) != 0 {
+		d.OUs = ousSet
+	}
 	d.Permissions = permissionsSet
 	d.ApprovalRequired = types.BoolPointerValue(out.ApprovalRequired)
 	d.Duration = types.Int64PointerValue(out.Duration)

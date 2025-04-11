@@ -11,6 +11,12 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 )
 
+const (
+	accountsAndOUsRequiredMessageSummary  = "At Least One Account or OU Must Be Specified."
+	accountsAndOUsRequiredMessageDetail   = "Either 'Accounts' or 'OUs' must have at least one element. Both cannot be empty."
+	accountsAndOUsRequiredMessageMarkdown = "\n> **NOTE:** The `ous` and `accounts` fields are labeled as *Optional*; however, at least one `ou` or `account` must be provided."
+)
+
 var (
 	eligibilityAccountAttrTypes = map[string]attr.Type{
 		"account_id":   types.StringType,
@@ -43,8 +49,8 @@ type EligibilityPermission struct {
 
 func AccountAttributeSet() schema.SetNestedAttribute {
 	return schema.SetNestedAttribute{
-		MarkdownDescription: "A list of AWS accounts the eligibility will apply to.",
-		Required:            true,
+		MarkdownDescription: "A list of AWS accounts the eligibility will apply to. " + accountsAndOUsRequiredMessageDetail,
+		Optional:            true,
 		NestedObject: schema.NestedAttributeObject{
 			Attributes: map[string]schema.Attribute{
 				"account_id": schema.StringAttribute{
@@ -74,8 +80,8 @@ func AccountAttributeSet() schema.SetNestedAttribute {
 
 func OUAttributeSet() schema.SetNestedAttribute {
 	return schema.SetNestedAttribute{
-		MarkdownDescription: "A list of AWS OUs the eligibility will apply to.",
-		Required:            true,
+		MarkdownDescription: "A list of AWS OUs the eligibility will apply to. " + accountsAndOUsRequiredMessageDetail,
+		Optional:            true,
 		NestedObject: schema.NestedAttributeObject{
 			Attributes: map[string]schema.Attribute{
 				"ou_id": schema.StringAttribute{
