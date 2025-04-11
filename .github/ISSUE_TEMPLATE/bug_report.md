@@ -6,7 +6,7 @@ about: Create a report to help us improve
 
 ## Prerequisites
 
-Please Check that your issue isn't already filed: [Open Issues](https://github.com/brittandeyoung/terraform-provider-awsteam/issues)
+Please Check that your issue isn't already filed: [Open Issues](https://github.com/awsteam-contrib/terraform-provider-awsteam/issues)
 
 ## Description
 

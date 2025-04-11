@@ -2,7 +2,7 @@ package provider
 
 import (
 	"github.com/YakDriver/regexache"
-	"github.com/brittandeyoung/terraform-provider-awsteam/internal/sdk/awsteam"
+	"github.com/awsteam-contrib/terraform-provider-awsteam/internal/sdk/awsteam"
 	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
 	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/diag"

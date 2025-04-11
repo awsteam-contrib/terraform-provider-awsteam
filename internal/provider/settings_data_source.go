@@ -4,8 +4,8 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/brittandeyoung/terraform-provider-awsteam/internal/names"
-	"github.com/brittandeyoung/terraform-provider-awsteam/internal/sdk/awsteam"
+	"github.com/awsteam-contrib/terraform-provider-awsteam/internal/names"
+	"github.com/awsteam-contrib/terraform-provider-awsteam/internal/sdk/awsteam"
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
