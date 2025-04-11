@@ -1,4 +1,4 @@
-module github.com/brittandeyoung/terraform-provider-awsteam
+module github.com/awsteam-contrib/terraform-provider-awsteam
 
 go 1.23.0
 

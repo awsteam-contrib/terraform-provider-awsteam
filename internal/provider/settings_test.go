@@ -6,7 +6,7 @@ import (
 	"os"
 	"testing"
 
-	"github.com/brittandeyoung/terraform-provider-awsteam/internal/acctest"
+	"github.com/awsteam-contrib/terraform-provider-awsteam/internal/acctest"
 	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
 )
 

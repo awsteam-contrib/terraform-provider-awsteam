@@ -5,8 +5,8 @@ import (
 	"fmt"
 
 	"github.com/aws/smithy-go/ptr"
-	"github.com/brittandeyoung/terraform-provider-awsteam/internal/acctest"
-	"github.com/brittandeyoung/terraform-provider-awsteam/internal/sdk/awsteam"
+	"github.com/awsteam-contrib/terraform-provider-awsteam/internal/acctest"
+	"github.com/awsteam-contrib/terraform-provider-awsteam/internal/sdk/awsteam"
 	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
 	"github.com/hashicorp/terraform-plugin-testing/terraform"
 )

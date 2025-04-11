@@ -6,8 +6,8 @@ import (
 
 	"github.com/YakDriver/regexache"
 	"github.com/aws/smithy-go/ptr"
-	"github.com/brittandeyoung/terraform-provider-awsteam/internal/names"
-	"github.com/brittandeyoung/terraform-provider-awsteam/internal/sdk/awsteam"
+	"github.com/awsteam-contrib/terraform-provider-awsteam/internal/names"
+	"github.com/awsteam-contrib/terraform-provider-awsteam/internal/sdk/awsteam"
 	"github.com/hashicorp/terraform-plugin-framework-validators/setvalidator"
 	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
