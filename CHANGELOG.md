@@ -9,12 +9,16 @@ This project adheres to [Semantic Versioning](http://semver.org/) and [Keep a Ch
 
 ### Changes
 
-* Resource: `awsteam_eligibility_group` - The `accounts` and `ous` fields have been made *optional*. A configuration validation rule now verifies that at least one `account` or `ou` is provided. It is no longer required to pass an empty list for `accounts` or `ous` as long as you provide at least one value for either of these fields. [70](https://github.com/awsteam-contrib/terraform-provider-awsteam/issues/70)
-* Resource: `awsteam_eligibility_user` - The `accounts` and `ous` fields have been made *optional*. A configuration validation rule now verifies that at least one `account` or `ou` is provided. It is no longer required to pass an empty list for `accounts` or `ous` as long as you provide at least one value for either of these fields. [70](https://github.com/awsteam-contrib/terraform-provider-awsteam/issues/70)
-
 ### Fixes
 
 ### Breaks
+
+## 1.1.1 - (2025-04-15)
+
+### Changes
+
+* Resource: `awsteam_eligibility_group` - The `accounts` and `ous` fields have been made *optional*. A configuration validation rule now verifies that at least one `account` or `ou` is provided. It is no longer required to pass an empty list for `accounts` or `ous` as long as you provide at least one value for either of these fields. [70](https://github.com/awsteam-contrib/terraform-provider-awsteam/issues/70)
+* Resource: `awsteam_eligibility_user` - The `accounts` and `ous` fields have been made *optional*. A configuration validation rule now verifies that at least one `account` or `ou` is provided. It is no longer required to pass an empty list for `accounts` or `ous` as long as you provide at least one value for either of these fields. [70](https://github.com/awsteam-contrib/terraform-provider-awsteam/issues/70)
 
 ## 1.1.0 - (2024-03-26)
 
