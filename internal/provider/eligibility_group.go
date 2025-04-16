@@ -121,7 +121,7 @@ func (r *EligibilityGroupResource) ValidateConfig(ctx context.Context, req resou
 		return
 	}
 
-	if len(config.Accounts.Elements()) == 0 && len(config.OUs.Elements()) == 0 {
+	if !config.Accounts.IsUnknown() && len(config.Accounts.Elements()) == 0 && len(config.OUs.Elements()) == 0 && !config.OUs.IsUnknown() {
 		resp.Diagnostics.AddError(
 			accountsAndOUsRequiredMessageSummary,
 			accountsAndOUsRequiredMessageDetail,
