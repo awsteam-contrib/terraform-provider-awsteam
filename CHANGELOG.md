@@ -13,6 +13,13 @@ This project adheres to [Semantic Versioning](http://semver.org/) and [Keep a Ch
 
 ### Breaks
 
+## 1.1.2 - (2025-04-16)
+
+### Fixes
+
+* Resource: `awsteam_eligibility_group` - Validation rule to ensure a single value is provided for `accounts` or `ous` now allows `unknown` values.
+* Resource: `awsteam_eligibility_user` - Validation rule to ensure a single value is provided for `accounts` or `ous` now allows `unknown` values.
+
 ## 1.1.1 - (2025-04-15)
 
 ### Changes
