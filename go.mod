@@ -15,7 +15,7 @@ require (
 	github.com/hashicorp/terraform-plugin-go v0.26.0
 	github.com/hashicorp/terraform-plugin-log v0.9.0
 	github.com/hashicorp/terraform-plugin-testing v1.12.0
-	github.com/hasura/go-graphql-client v0.12.1
+	github.com/hasura/go-graphql-client v0.14.4
 	golang.org/x/oauth2 v0.23.0
 )
 
@@ -33,6 +33,7 @@ require (
 	github.com/bgentry/speakeasy v0.1.0 // indirect
 	github.com/chzyer/readline v0.0.0-20180603132655-2972be24d48e // indirect
 	github.com/cloudflare/circl v1.3.7 // indirect
+	github.com/coder/websocket v1.8.13 // indirect
 	github.com/cyphar/filepath-securejoin v0.2.5 // indirect
 	github.com/emirpasic/gods v1.18.1 // indirect
 	github.com/fatih/color v1.16.0 // indirect
@@ -109,5 +110,4 @@ require (
 	google.golang.org/protobuf v1.36.3 // indirect
 	gopkg.in/warnings.v0 v0.1.2 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
-	nhooyr.io/websocket v1.8.10 // indirect
 )
