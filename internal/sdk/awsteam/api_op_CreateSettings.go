@@ -2,10 +2,7 @@ package awsteam
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
-
-	"github.com/aws/smithy-go/ptr"
 )
 
 type CreateSettingsInput struct {
@@ -32,32 +29,26 @@ type CreateSettingsOutput struct {
 
 func (client *Client) CreateSettings(ctx context.Context, in *CreateSettingsInput) (*CreateSettingsOutput, error) {
 	out := &CreateSettingsOutput{}
-	var id string
+	id := defaultString(in.Id, "settings")
 
-	if in.Id != nil {
-		id = *in.Id
-	} else {
-		id = "settings"
-	}
-
-	q := fmt.Sprintf(`mutation CreateSettings {
+	query := fmt.Sprintf(`mutation CreateSettings {
 		createSettings(
 			input: {
-				id: "%s"
-				duration: "%d"
-				expiry: "%d"
-				comments: %t
-				ticketNo: %t
-				approval: %t
-				modifiedBy: "%s"
-				sesNotificationsEnabled: %t
-				snsNotificationsEnabled: %t
-				slackNotificationsEnabled: %t
-				sesSourceEmail: "%s"
-				sesSourceArn: "%s"
-				slackToken: "%s"
-				teamAdminGroup: "%s"
-				teamAuditorGroup: "%s"
+				id: %s
+				duration: %s
+				expiry: %s
+				comments: %s
+				ticketNo: %s
+				approval: %s
+				modifiedBy: %s
+				sesNotificationsEnabled: %s
+				snsNotificationsEnabled: %s
+				slackNotificationsEnabled: %s
+				sesSourceEmail: %s
+				sesSourceArn: %s
+				slackToken: %s
+				teamAdminGroup: %s
+				teamAuditorGroup: %s
 			}
 		) {
 			id
@@ -79,31 +70,24 @@ func (client *Client) CreateSettings(ctx context.Context, in *CreateSettingsInpu
 			updatedAt
 		}
 	}
-	`, id, ptr.ToInt64(in.Duration),
-		ptr.ToInt64(in.Expiry),
-		ptr.ToBool(in.Comments),
-		ptr.ToBool(in.TicketNo),
-		ptr.ToBool(in.Approval),
-		ptr.ToString(in.ModifiedBy),
-		ptr.ToBool(in.SesNotificationsEnabled),
-		ptr.ToBool(in.SnsNotificationsEnabled),
-		ptr.ToBool(in.SlackNotificationsEnabled),
-		ptr.ToString(in.SesSourceEmail),
-		ptr.ToString(in.SesSourceArn),
-		ptr.ToString(in.SlackToken),
-		ptr.ToString(in.TeamAdminGroup),
-		ptr.ToString(in.TeamAuditorGroup),
+	`, graphqlString(id),
+		graphqlQuotedInt64Ptr(in.Duration),
+		graphqlQuotedInt64Ptr(in.Expiry),
+		graphqlBoolPtr(in.Comments),
+		graphqlBoolPtr(in.TicketNo),
+		graphqlBoolPtr(in.Approval),
+		graphqlStringPtr(in.ModifiedBy),
+		graphqlBoolPtr(in.SesNotificationsEnabled),
+		graphqlBoolPtr(in.SnsNotificationsEnabled),
+		graphqlBoolPtr(in.SlackNotificationsEnabled),
+		graphqlStringPtr(in.SesSourceEmail),
+		graphqlStringPtr(in.SesSourceArn),
+		graphqlStringPtr(in.SlackToken),
+		graphqlStringPtr(in.TeamAdminGroup),
+		graphqlStringPtr(in.TeamAuditorGroup),
 	)
 
-	raw, err := client.GraphClient.ExecRaw(ctx, q, nil)
-
-	if err != nil {
-		return nil, err
-	}
-
-	err = json.Unmarshal(raw, out)
-
-	if err != nil {
+	if err := client.executeGraphQL(ctx, query, nil, out); err != nil {
 		return nil, err
 	}
 

@@ -2,11 +2,8 @@ package awsteam
 
 import (
 	"context"
-	"encoding/json"
 	"errors"
 	"fmt"
-
-	"github.com/aws/smithy-go/ptr"
 )
 
 type UpdateApproversInput struct {
@@ -30,28 +27,26 @@ func (client *Client) UpdateApprovers(ctx context.Context, in *UpdateApproversIn
 		return nil, errors.New("Id is required to update Approvers.")
 	}
 
-	approversJson, err := json.Marshal(in.Approvers)
-
+	approversJSON, err := graphqlJSON(in.Approvers)
 	if err != nil {
 		return nil, err
 	}
 
-	groupIdsJson, err := json.Marshal(in.GroupIds)
-
+	groupIDsJSON, err := graphqlJSON(in.GroupIds)
 	if err != nil {
 		return nil, err
 	}
 
-	q := fmt.Sprintf(`mutation UpdateApprovers {
+	query := fmt.Sprintf(`mutation UpdateApprovers {
 		updateApprovers(
 			input: {
-				id: "%s"
-				name: "%s"
-				type: "%s"
+				id: %s
+				name: %s
+				type: %s
 				approvers: %s
 				groupIds: %s
-				ticketNo: "%s"
-				modifiedBy: "%s"
+				ticketNo: %s
+				modifiedBy: %s
 			}
 		)  {
 			id
@@ -64,24 +59,16 @@ func (client *Client) UpdateApprovers(ctx context.Context, in *UpdateApproversIn
 			updatedAt
 			updatedAt
 		}
-	}`, ptr.ToString(in.Id),
-		ptr.ToString(in.Name),
-		ptr.ToString(in.Type),
-		string(approversJson),
-		string(groupIdsJson),
-		ptr.ToString(in.TicketNo),
-		ptr.ToString(in.ModifiedBy),
+	}`, graphqlStringPtr(in.Id),
+		graphqlStringPtr(in.Name),
+		graphqlStringPtr(in.Type),
+		approversJSON,
+		groupIDsJSON,
+		graphqlStringPtr(in.TicketNo),
+		graphqlStringPtr(in.ModifiedBy),
 	)
 
-	raw, err := client.GraphClient.ExecRaw(ctx, q, nil)
-
-	if err != nil {
-		return nil, err
-	}
-
-	err = json.Unmarshal(raw, out)
-
-	if err != nil {
+	if err := client.executeGraphQL(ctx, query, nil, out); err != nil {
 		return nil, err
 	}
 

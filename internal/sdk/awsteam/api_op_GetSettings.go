@@ -2,7 +2,6 @@ package awsteam
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
 )
 
@@ -16,16 +15,10 @@ type GetSettingsOutput struct {
 
 func (client *Client) GetSettings(ctx context.Context, in *GetSettingsInput) (*GetSettingsOutput, error) {
 	out := &GetSettingsOutput{}
-	var id string
+	id := defaultString(in.Id, "settings")
 
-	if in.Id != nil {
-		id = *in.Id
-	} else {
-		id = "settings"
-	}
-
-	q := fmt.Sprintf(`query GetSettings {
-		getSettings(id: "%s") {
+	query := fmt.Sprintf(`query GetSettings {
+		getSettings(id: %s) {
 			id
 			duration
 			expiry
@@ -44,18 +37,10 @@ func (client *Client) GetSettings(ctx context.Context, in *GetSettingsInput) (*G
 			createdAt
 			updatedAt
 		}
-	}	
-	`, id)
-
-	raw, err := client.GraphClient.ExecRaw(ctx, q, nil)
-
-	if err != nil {
-		return nil, err
 	}
+	`, graphqlString(id))
 
-	err = json.Unmarshal(raw, out)
-
-	if err != nil {
+	if err := client.executeGraphQL(ctx, query, nil, out); err != nil {
 		return nil, err
 	}
 

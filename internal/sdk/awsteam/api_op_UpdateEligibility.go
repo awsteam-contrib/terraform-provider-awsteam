@@ -2,7 +2,6 @@ package awsteam
 
 import (
 	"context"
-	"encoding/json"
 	"errors"
 )
 
@@ -42,7 +41,7 @@ func (client *Client) UpdateEligibility(ctx context.Context, in *UpdateEligibili
 		"input": *in,
 	}
 
-	q := `mutation UpdateEligibility($input: UpdateEligibilityInput!) {
+	query := `mutation UpdateEligibility($input: UpdateEligibilityInput!) {
 		updateEligibility(input: $input) {
 			id
 			name
@@ -68,15 +67,7 @@ func (client *Client) UpdateEligibility(ctx context.Context, in *UpdateEligibili
 		}
 	}`
 
-	raw, err := client.GraphClient.ExecRaw(ctx, q, variables)
-
-	if err != nil {
-		return nil, err
-	}
-
-	err = json.Unmarshal(raw, out)
-
-	if err != nil {
+	if err := client.executeGraphQL(ctx, query, variables, out); err != nil {
 		return nil, err
 	}
 

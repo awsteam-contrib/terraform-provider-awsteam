@@ -2,7 +2,6 @@ package awsteam
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
 )
 
@@ -16,30 +15,16 @@ type DeleteSettingsOutput struct {
 
 func (client *Client) DeleteSettings(ctx context.Context, in *DeleteSettingsInput) (*DeleteSettingsOutput, error) {
 	out := &DeleteSettingsOutput{}
-	var id string
+	id := defaultString(in.Id, "settings")
 
-	if in.Id != nil {
-		id = *in.Id
-	} else {
-		id = "settings"
-	}
-
-	q := fmt.Sprintf(`mutation DeleteSettings {
-		deleteSettings(input: { id: "%s" }) {
+	query := fmt.Sprintf(`mutation DeleteSettings {
+		deleteSettings(input: { id: %s }) {
 			id
 		}
-	}	
-	`, id)
-
-	raw, err := client.GraphClient.ExecRaw(ctx, q, nil)
-
-	if err != nil {
-		return nil, err
 	}
+	`, graphqlString(id))
 
-	err = json.Unmarshal(raw, out)
-
-	if err != nil {
+	if err := client.executeGraphQL(ctx, query, nil, out); err != nil {
 		return nil, err
 	}
 

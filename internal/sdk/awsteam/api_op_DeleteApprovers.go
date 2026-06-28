@@ -2,11 +2,8 @@ package awsteam
 
 import (
 	"context"
-	"encoding/json"
 	"errors"
 	"fmt"
-
-	"github.com/aws/smithy-go/ptr"
 )
 
 type DeleteApproversInput struct {
@@ -24,22 +21,14 @@ func (client *Client) DeleteApprovers(ctx context.Context, in *DeleteApproversIn
 		return nil, errors.New("Id is required to delete Approvers.")
 	}
 
-	q := fmt.Sprintf(`mutation DeleteApprovers {
-		deleteApprovers(input: { id: "%s" }) {
+	query := fmt.Sprintf(`mutation DeleteApprovers {
+		deleteApprovers(input: { id: %s }) {
 			id
 		}
-	}	
-	`, ptr.ToString(in.Id))
-
-	raw, err := client.GraphClient.ExecRaw(ctx, q, nil)
-
-	if err != nil {
-		return nil, err
 	}
+	`, graphqlStringPtr(in.Id))
 
-	err = json.Unmarshal(raw, out)
-
-	if err != nil {
+	if err := client.executeGraphQL(ctx, query, nil, out); err != nil {
 		return nil, err
 	}
 

@@ -2,7 +2,6 @@ package awsteam
 
 import (
 	"context"
-	"encoding/json"
 )
 
 type GetAccountsInput struct{}
@@ -14,22 +13,14 @@ type GetAccountsOutput struct {
 func (client *Client) GetAccounts(ctx context.Context, in *GetAccountsInput) (*GetAccountsOutput, error) {
 	out := &GetAccountsOutput{}
 
-	q := `query GetAccounts {
+	query := `query GetAccounts {
 		getAccounts {
 			name
 			id
 		}
 	}`
 
-	raw, err := client.GraphClient.ExecRaw(ctx, q, nil)
-
-	if err != nil {
-		return nil, err
-	}
-
-	err = json.Unmarshal(raw, out)
-
-	if err != nil {
+	if err := client.executeGraphQL(ctx, query, nil, out); err != nil {
 		return nil, err
 	}
 
