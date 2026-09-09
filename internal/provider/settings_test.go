@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"math/rand"
+	"os"
 	"regexp"
 	"testing"
 
@@ -35,6 +36,10 @@ func TestAccSettings_serial(t *testing.T) {
 // Call this at the top of every settings acceptance test.
 func testAccSettingsSaveAndRestore(t *testing.T) {
 	t.Helper()
+
+	if os.Getenv("TF_ACC") == "" {
+		t.Skip("Acceptance tests skipped unless env 'TF_ACC' set")
+	}
 
 	ctx := context.Background()
 	client := acctest.NewAWSTeamClient(ctx)

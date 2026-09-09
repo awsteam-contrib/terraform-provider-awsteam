@@ -26,9 +26,6 @@ type Client struct {
 func (client *Client) detectSettingsCapabilities(ctx context.Context) (*SettingsCapabilities, error) {
 	caps := &SettingsCapabilities{}
 
-	// Check the Settings output type rather than CreateSettingsInput. All conditional
-	// queries and mutation responses request useOUCache from the Settings type, so that
-	// is the binding constraint for whether the field is safe to include.
 	q := `query { __type(name: "Settings") { fields { name } } }`
 
 	raw, err := client.GraphClient.ExecRaw(ctx, q, nil)
