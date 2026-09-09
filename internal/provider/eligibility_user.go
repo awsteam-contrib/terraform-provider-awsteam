@@ -279,11 +279,7 @@ func (r *EligibilityUserResource) Update(ctx context.Context, req resource.Updat
 		return
 	}
 
-	updateRequired := false
-
-	if !reflect.DeepEqual(state, plan) {
-		updateRequired = true
-	}
+	updateRequired := !reflect.DeepEqual(state, plan)
 
 	if updateRequired {
 		var accounts []*EligibilityAccount

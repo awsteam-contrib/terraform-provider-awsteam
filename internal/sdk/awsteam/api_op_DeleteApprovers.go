@@ -21,7 +21,7 @@ func (client *Client) DeleteApprovers(ctx context.Context, in *DeleteApproversIn
 	out := &DeleteApproversOutput{}
 
 	if in.Id == nil {
-		return nil, errors.New("Id is required to delete Approvers.")
+		return nil, errors.New("id is required to delete Approvers")
 	}
 
 	q := fmt.Sprintf(`mutation DeleteApprovers {

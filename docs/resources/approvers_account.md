@@ -50,6 +50,8 @@ resource "awsteam_approvers_account" "example" {
 
 Import is supported using the following syntax:
 
+The [`terraform import` command](https://developer.hashicorp.com/terraform/cli/commands/import) can be used, for example:
+
 ```shell
 # Import using AWS Account ID
 terraform import awsteam_approvers_account.example 123456789011

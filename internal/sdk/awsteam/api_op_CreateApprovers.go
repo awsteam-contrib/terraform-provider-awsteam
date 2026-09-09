@@ -27,7 +27,7 @@ func (client *Client) CreateApprovers(ctx context.Context, in *CreateApproversIn
 	out := &CreateApproversOutput{}
 
 	if in.Id == nil {
-		return nil, errors.New("Id is required to create Approvers.")
+		return nil, errors.New("id is required to create Approvers")
 	}
 
 	approversJson, err := json.Marshal(in.Approvers)

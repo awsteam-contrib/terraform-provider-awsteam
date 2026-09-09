@@ -27,7 +27,7 @@ func (client *Client) UpdateApprovers(ctx context.Context, in *UpdateApproversIn
 	out := &UpdateApproversOutput{}
 
 	if in.Id == nil {
-		return nil, errors.New("Id is required to update Approvers.")
+		return nil, errors.New("id is required to update Approvers")
 	}
 
 	approversJson, err := json.Marshal(in.Approvers)

@@ -65,7 +65,11 @@ func (config *Config) Build(ctx context.Context) {
 		panic(err)
 	}
 
-	defer res.Body.Close()
+	defer func() {
+		if err := res.Body.Close(); err != nil {
+			tflog.Error(ctx, "Failed to close response body.", map[string]interface{}{"error": err})
+		}
+	}()
 
 	body, err := io.ReadAll(res.Body)
 

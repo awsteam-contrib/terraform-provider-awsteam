@@ -21,7 +21,7 @@ func (client *Client) GetApprovers(ctx context.Context, in *GetApproversInput) (
 	out := &GetApproversOutput{}
 
 	if in.Id == nil {
-		return nil, errors.New("Id is required to get Approvers.")
+		return nil, errors.New("id is required to get Approvers")
 	}
 
 	q := fmt.Sprintf(`query GetApprovers {

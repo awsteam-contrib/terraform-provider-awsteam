@@ -21,7 +21,7 @@ func (client *Client) GetEligibility(ctx context.Context, in *GetEligibilityInpu
 	out := &GetEligibilityOutput{}
 
 	if in.Id == nil {
-		return nil, errors.New("Id is required to get Eligibility.")
+		return nil, errors.New("id is required to get Eligibility")
 	}
 
 	q := fmt.Sprintf(`query GetEligibility {

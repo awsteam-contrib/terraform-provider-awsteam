@@ -21,7 +21,7 @@ func (client *Client) DeleteEligibility(ctx context.Context, in *DeleteEligibili
 	out := &DeleteEligibilityOutput{}
 
 	if in.Id == nil {
-		return nil, errors.New("Id is required to delete Eligibility.")
+		return nil, errors.New("id is required to delete Eligibility")
 	}
 
 	q := fmt.Sprintf(`mutation DeleteEligibility {

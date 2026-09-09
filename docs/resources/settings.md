@@ -4,7 +4,7 @@ page_title: "awsteam_settings Resource - terraform-provider-awsteam"
 subcategory: ""
 description: |-
   Allows configuration of the settings within an AWS TEAM deployment.
-  Important: By default the settings resource will already exist on a fresh deployment of AWS TEAM and will cause a create to fail. Use the import block example below when deploying to a fresh instance of AWS TEAM to import the existing settings
+  **Important:** By default the `settings` resource will already exist on a fresh deployment of AWS TEAM and will cause a create to fail. Use the import block example below when deploying to a fresh instance of AWS TEAM to import the existing `settings`
 ---
 
 # awsteam_settings (Resource)
@@ -72,6 +72,8 @@ resource "awsteam_settings" "example_with_ou_cache" {
 ## Import
 
 Import is supported using the following syntax:
+
+The [`terraform import` command](https://developer.hashicorp.com/terraform/cli/commands/import) can be used, for example:
 
 ```shell
 # Import using settings ID, this is always "settings"
