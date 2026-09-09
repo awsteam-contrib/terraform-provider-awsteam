@@ -293,11 +293,7 @@ func (r *SettingsResource) Update(ctx context.Context, req resource.UpdateReques
 		return
 	}
 
-	updateRequired := false
-
-	if !reflect.DeepEqual(state, plan) {
-		updateRequired = true
-	}
+	updateRequired := !reflect.DeepEqual(state, plan)
 
 	if plan.UseOUCache.ValueBool() && !r.client.SettingsCapabilities.UseOUCacheSupported {
 		resp.Diagnostics.AddError(

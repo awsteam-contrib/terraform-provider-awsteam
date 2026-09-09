@@ -5,14 +5,17 @@ version: "2"
 issues:
   max-same-issues: 0
 
+formatters:
+  enable:
+    - gofmt
+
 linters:
-  disable-all: true
+  default: none
   enable:
     - durationcheck
     - errcheck
     - forcetypeassert
     - godot
-    - gofmt
     - ineffassign
     - makezero
     - misspell

@@ -27,7 +27,7 @@ func (client *Client) CreateEligibility(ctx context.Context, in *CreateEligibili
 	out := &CreateEligibilityOutput{}
 
 	if in.Id == nil {
-		return nil, errors.New("Id is required to create Eligibility.")
+		return nil, errors.New("id is required to create Eligibility")
 	}
 
 	if in.Accounts == nil {

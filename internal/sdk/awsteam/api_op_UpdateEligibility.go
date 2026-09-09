@@ -27,7 +27,7 @@ func (client *Client) UpdateEligibility(ctx context.Context, in *UpdateEligibili
 	out := &UpdateEligibilityOutput{}
 
 	if in.Id == nil {
-		return nil, errors.New("Id is required to update Eligibility.")
+		return nil, errors.New("id is required to update Eligibility")
 	}
 
 	if in.Accounts == nil {
