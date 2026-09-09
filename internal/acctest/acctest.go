@@ -49,5 +49,9 @@ func NewAWSTeamClient(ctx context.Context) *awsteam.Client {
 
 	config.Build(ctx)
 
-	return config.NewClient(ctx)
+	client, err := config.NewClient(ctx)
+	if err != nil {
+		panic(err)
+	}
+	return client
 }

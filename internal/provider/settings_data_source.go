@@ -86,6 +86,10 @@ func (d *SettingsDataSource) Schema(ctx context.Context, req datasource.SchemaRe
 				MarkdownDescription: "Determines if ticket number field is mandatory for elevated access requests",
 				Computed:            true,
 			},
+			"use_ou_cache": schema.BoolAttribute{
+				MarkdownDescription: "Enable caching of AWS Organizations OU data to improve performance.",
+				Computed:            true,
+			},
 			names.AttrModifiedBy: ModifiedByAttribute(),
 			names.AttrCreatedAt:  CreatedAtAttribute(),
 			names.AttrUpdatedAt:  UpdatedAtAttribute(),

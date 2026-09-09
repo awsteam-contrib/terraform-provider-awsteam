@@ -75,6 +75,7 @@ type Settings struct {
 	TeamAdminGroup            *string `json:"teamAdminGroup"`
 	TeamAuditorGroup          *string `json:"teamAuditorGroup"`
 	TicketNo                  *bool   `json:"ticketNo"`
+	UseOUCache                *bool   `json:"useOUCache"`
 	ModifiedBy                *string `json:"modifiedBy"`
 	CreatedAt                 *string `json:"createdAt"`
 	UpdatedAt                 *string `json:"updatedAt"`

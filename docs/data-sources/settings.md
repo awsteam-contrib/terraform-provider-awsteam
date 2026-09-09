@@ -38,3 +38,4 @@ data "awsteam_setting_settings" "example" {}
 - `team_auditor_group` (String) Group of users allowed to audit TEAM elevated access requests
 - `ticket_no` (Boolean) Determines if ticket number field is mandatory for elevated access requests
 - `updated_at` (String) The date and time of the last time the item was updated
+- `use_ou_cache` (Boolean) Enable caching of AWS Organizations OU data to improve performance.

@@ -13,6 +13,13 @@ This project adheres to [Semantic Versioning](http://semver.org/) and [Keep a Ch
 
 ### Breaks
 
+## 1.2.0 - (2026-09-09)
+
+### New
+
+* Resource: `awsteam_settings` - Added optional `use_ou_cache` attribute to enable caching of AWS Organizations OU data for improved performance. Requires AWS TEAM v1.5.0 or later; the provider detects support via schema introspection and returns a clear error if the field is used against an older version. [#97](https://github.com/awsteam-contrib/terraform-provider-awsteam/issues/97)
+* DataSource: `awsteam_settings` - Added `use_ou_cache` computed attribute. [#97](https://github.com/awsteam-contrib/terraform-provider-awsteam/issues/97)
+
 ## 1.1.2 - (2025-04-16)
 
 ### Fixes
