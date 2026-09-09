@@ -9,6 +9,8 @@ import (
 )
 
 func testAccSettingsDataSource_basic(t *testing.T) {
+	testAccSettingsSaveAndRestore(t)
+
 	resourceName := "awsteam_settings.test"
 	dataSourceName := "data.awsteam_settings.test"
 	teamAdminGroup := "Team-Admin-Group"

@@ -44,6 +44,7 @@ type SettingsModel struct {
 	TeamAdminGroup            types.String `tfsdk:"team_admin_group"`
 	TeamAuditorGroup          types.String `tfsdk:"team_auditor_group"`
 	TicketNo                  types.Bool   `tfsdk:"ticket_no"`
+	UseOUCache                types.Bool   `tfsdk:"use_ou_cache"`
 	ModifiedBy                types.String `tfsdk:"modified_by"`
 	CreatedAt                 types.String `tfsdk:"created_at"`
 	UpdatedAt                 types.String `tfsdk:"updated_at"`
@@ -138,6 +139,12 @@ func (r *SettingsResource) Schema(ctx context.Context, req resource.SchemaReques
 				Default:             booldefault.StaticBool(false),
 				Computed:            true,
 			},
+			"use_ou_cache": schema.BoolAttribute{
+				MarkdownDescription: "Enable caching of AWS Organizations OU data to improve performance.",
+				Optional:            true,
+				Default:             booldefault.StaticBool(false),
+				Computed:            true,
+			},
 			names.AttrModifiedBy: ModifiedByAttribute(),
 			names.AttrCreatedAt:  CreatedAtAttribute(),
 			names.AttrUpdatedAt:  UpdatedAtAttribute(),
@@ -173,6 +180,14 @@ func (r *SettingsResource) Create(ctx context.Context, req resource.CreateReques
 		return
 	}
 
+	if data.UseOUCache.ValueBool() && !r.client.SettingsCapabilities.UseOUCacheSupported {
+		resp.Diagnostics.AddError(
+			"Unsupported Attribute",
+			"use_ou_cache requires AWS TEAM v1.5.0 or later. Upgrade AWS TEAM or remove use_ou_cache from your configuration.",
+		)
+		return
+	}
+
 	in := &awsteam.CreateSettingsInput{
 		TeamAdminGroup:            data.TeamAdminGroup.ValueStringPointer(),
 		TeamAuditorGroup:          data.TeamAuditorGroup.ValueStringPointer(),
@@ -182,6 +197,7 @@ func (r *SettingsResource) Create(ctx context.Context, req resource.CreateReques
 		SnsNotificationsEnabled:   data.SnsNotificationsEnabled.ValueBoolPointer(),
 		SlackNotificationsEnabled: data.SlackNotificationsEnabled.ValueBoolPointer(),
 		TicketNo:                  data.TicketNo.ValueBoolPointer(),
+		UseOUCache:                data.UseOUCache.ValueBoolPointer(),
 		Duration:                  data.Duration.ValueInt64Pointer(),
 		Expiry:                    data.Expiry.ValueInt64Pointer(),
 		ModifiedBy:                data.ModifiedBy.ValueStringPointer(),
@@ -283,6 +299,14 @@ func (r *SettingsResource) Update(ctx context.Context, req resource.UpdateReques
 		updateRequired = true
 	}
 
+	if plan.UseOUCache.ValueBool() && !r.client.SettingsCapabilities.UseOUCacheSupported {
+		resp.Diagnostics.AddError(
+			"Unsupported Attribute",
+			"use_ou_cache requires AWS TEAM v1.5.0 or later. Upgrade AWS TEAM or remove use_ou_cache from your configuration.",
+		)
+		return
+	}
+
 	if updateRequired {
 		in := &awsteam.UpdateSettingsInput{
 			TeamAdminGroup:            plan.TeamAdminGroup.ValueStringPointer(),
@@ -293,6 +317,7 @@ func (r *SettingsResource) Update(ctx context.Context, req resource.UpdateReques
 			SnsNotificationsEnabled:   plan.SnsNotificationsEnabled.ValueBoolPointer(),
 			SlackNotificationsEnabled: plan.SlackNotificationsEnabled.ValueBoolPointer(),
 			TicketNo:                  plan.TicketNo.ValueBoolPointer(),
+			UseOUCache:                plan.UseOUCache.ValueBoolPointer(),
 			Duration:                  plan.Duration.ValueInt64Pointer(),
 			Expiry:                    plan.Expiry.ValueInt64Pointer(),
 			ModifiedBy:                plan.ModifiedBy.ValueStringPointer(),
@@ -367,5 +392,10 @@ func (d *SettingsModel) flatten(out *awsteam.Settings) {
 	d.TeamAdminGroup = types.StringPointerValue(out.TeamAdminGroup)
 	d.TeamAuditorGroup = types.StringPointerValue(out.TeamAuditorGroup)
 	d.TicketNo = types.BoolPointerValue(out.TicketNo)
+	if out.UseOUCache != nil {
+		d.UseOUCache = types.BoolPointerValue(out.UseOUCache)
+	} else {
+		d.UseOUCache = types.BoolValue(false)
+	}
 	d.UpdatedAt = types.StringPointerValue(out.UpdatedAt)
 }

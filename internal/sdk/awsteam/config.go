@@ -89,8 +89,7 @@ func (config *Config) Build(ctx context.Context) {
 	config.Token = token
 }
 
-func (config *Config) NewClient(ctx context.Context) *Client {
-	// Returns a configured client
+func (config *Config) NewClient(ctx context.Context) (*Client, error) {
 	src := oauth2.StaticTokenSource(
 		&oauth2.Token{AccessToken: config.Token.AccessToken},
 	)
@@ -104,5 +103,11 @@ func (config *Config) NewClient(ctx context.Context) *Client {
 		GraphEndpoint: config.GraphEndpoint,
 	}
 
-	return client
+	caps, err := client.detectSettingsCapabilities(ctx)
+	if err != nil {
+		return nil, err
+	}
+	client.SettingsCapabilities = caps
+
+	return client, nil
 }

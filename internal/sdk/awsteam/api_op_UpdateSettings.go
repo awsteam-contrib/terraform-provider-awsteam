@@ -23,6 +23,7 @@ type UpdateSettingsInput struct {
 	TeamAdminGroup            *string
 	TeamAuditorGroup          *string
 	TicketNo                  *bool
+	UseOUCache                *bool
 	ModifiedBy                *string
 	CreatedAt                 *string
 	UpdatedAt                 *string
@@ -32,79 +33,91 @@ type UpdateSettingsOutput struct {
 	Settings *Settings `json:"updateSettings"`
 }
 
+const updateSettingsMutation = `mutation UpdateSettings($input: UpdateSettingsInput!) {
+	updateSettings(input: $input) {
+		id
+		duration
+		expiry
+		comments
+		ticketNo
+		approval
+		modifiedBy
+		sesNotificationsEnabled
+		snsNotificationsEnabled
+		slackNotificationsEnabled
+		sesSourceEmail
+		sesSourceArn
+		slackToken
+		teamAdminGroup
+		teamAuditorGroup
+		createdAt
+		updatedAt
+	}
+}`
+
+const updateSettingsMutationWithOUCache = `mutation UpdateSettings($input: UpdateSettingsInput!) {
+	updateSettings(input: $input) {
+		id
+		duration
+		expiry
+		comments
+		ticketNo
+		approval
+		modifiedBy
+		sesNotificationsEnabled
+		snsNotificationsEnabled
+		slackNotificationsEnabled
+		sesSourceEmail
+		sesSourceArn
+		slackToken
+		teamAdminGroup
+		teamAuditorGroup
+		useOUCache
+		createdAt
+		updatedAt
+	}
+}`
+
 func (client *Client) UpdateSettings(ctx context.Context, in *UpdateSettingsInput) (*UpdateSettingsOutput, error) {
 	out := &UpdateSettingsOutput{}
-	var id string
 
+	id := "settings"
 	if in.Id != nil {
 		id = *in.Id
-	} else {
-		id = "settings"
 	}
 
-	q := fmt.Sprintf(`mutation UpdateSettings {
-		updateSettings(
-			input: {
-				id: "%s"
-				duration: "%d"
-				expiry: "%d"
-				comments: %t
-				ticketNo: %t
-				approval: %t
-				modifiedBy: "%s"
-				sesNotificationsEnabled: %t
-				snsNotificationsEnabled: %t
-				slackNotificationsEnabled: %t
-				sesSourceEmail: "%s"
-				sesSourceArn: "%s"
-				slackToken: "%s"
-				teamAdminGroup: "%s"
-				teamAuditorGroup: "%s"
-			}
-		) {
-			id
-			duration
-			expiry
-			comments
-			ticketNo
-			approval
-			modifiedBy
-			sesNotificationsEnabled
-			snsNotificationsEnabled
-			slackNotificationsEnabled
-			sesSourceEmail
-			sesSourceArn
-			slackToken
-			teamAdminGroup
-			teamAuditorGroup
-			createdAt
-			updatedAt
-		}
+	q := updateSettingsMutation
+	inputVars := map[string]interface{}{
+		"id":                        id,
+		"duration":                  fmt.Sprintf("%d", ptr.ToInt64(in.Duration)),
+		"expiry":                    fmt.Sprintf("%d", ptr.ToInt64(in.Expiry)),
+		"comments":                  ptr.ToBool(in.Comments),
+		"ticketNo":                  ptr.ToBool(in.TicketNo),
+		"approval":                  ptr.ToBool(in.Approval),
+		"modifiedBy":                ptr.ToString(in.ModifiedBy),
+		"sesNotificationsEnabled":   ptr.ToBool(in.SesNotificationsEnabled),
+		"snsNotificationsEnabled":   ptr.ToBool(in.SnsNotificationsEnabled),
+		"slackNotificationsEnabled": ptr.ToBool(in.SlackNotificationsEnabled),
+		"sesSourceEmail":            ptr.ToString(in.SesSourceEmail),
+		"sesSourceArn":              ptr.ToString(in.SesSourceArn),
+		"slackToken":                ptr.ToString(in.SlackToken),
+		"teamAdminGroup":            ptr.ToString(in.TeamAdminGroup),
+		"teamAuditorGroup":          ptr.ToString(in.TeamAuditorGroup),
 	}
-	`, id, ptr.ToInt64(in.Duration),
-		ptr.ToInt64(in.Expiry),
-		ptr.ToBool(in.Comments),
-		ptr.ToBool(in.TicketNo),
-		ptr.ToBool(in.Approval),
-		ptr.ToString(in.ModifiedBy),
-		ptr.ToBool(in.SesNotificationsEnabled),
-		ptr.ToBool(in.SnsNotificationsEnabled),
-		ptr.ToBool(in.SlackNotificationsEnabled),
-		ptr.ToString(in.SesSourceEmail),
-		ptr.ToString(in.SesSourceArn),
-		ptr.ToString(in.SlackToken),
-		ptr.ToString(in.TeamAdminGroup),
-		ptr.ToString(in.TeamAuditorGroup),
-	)
 
-	raw, err := client.GraphClient.ExecRaw(ctx, q, nil)
+	if client.SettingsCapabilities.UseOUCacheSupported {
+		q = updateSettingsMutationWithOUCache
+		inputVars["useOUCache"] = ptr.ToBool(in.UseOUCache)
+	}
 
+	vars := map[string]interface{}{"input": inputVars}
+
+	raw, err := client.GraphClient.ExecRaw(ctx, q, vars)
 	if err != nil {
 		return nil, err
 	}
 
 	err = json.Unmarshal(raw, out)
-
 	if err != nil {
 		return nil, err
 	}

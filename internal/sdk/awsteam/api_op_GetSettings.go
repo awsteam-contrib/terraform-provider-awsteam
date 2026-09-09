@@ -3,7 +3,6 @@ package awsteam
 import (
 	"context"
 	"encoding/json"
-	"fmt"
 )
 
 type GetSettingsInput struct {
@@ -14,47 +13,72 @@ type GetSettingsOutput struct {
 	Settings *Settings `json:"getSettings"`
 }
 
+const getSettingsQuery = `query GetSettings($id: ID!) {
+	getSettings(id: $id) {
+		id
+		duration
+		expiry
+		comments
+		ticketNo
+		approval
+		modifiedBy
+		sesNotificationsEnabled
+		snsNotificationsEnabled
+		slackNotificationsEnabled
+		sesSourceEmail
+		sesSourceArn
+		slackToken
+		teamAdminGroup
+		teamAuditorGroup
+		createdAt
+		updatedAt
+	}
+}`
+
+const getSettingsQueryWithOUCache = `query GetSettings($id: ID!) {
+	getSettings(id: $id) {
+		id
+		duration
+		expiry
+		comments
+		ticketNo
+		approval
+		modifiedBy
+		sesNotificationsEnabled
+		snsNotificationsEnabled
+		slackNotificationsEnabled
+		sesSourceEmail
+		sesSourceArn
+		slackToken
+		teamAdminGroup
+		teamAuditorGroup
+		useOUCache
+		createdAt
+		updatedAt
+	}
+}`
+
 func (client *Client) GetSettings(ctx context.Context, in *GetSettingsInput) (*GetSettingsOutput, error) {
 	out := &GetSettingsOutput{}
-	var id string
 
+	id := "settings"
 	if in.Id != nil {
 		id = *in.Id
-	} else {
-		id = "settings"
 	}
 
-	q := fmt.Sprintf(`query GetSettings {
-		getSettings(id: "%s") {
-			id
-			duration
-			expiry
-			comments
-			ticketNo
-			approval
-			modifiedBy
-			sesNotificationsEnabled
-			snsNotificationsEnabled
-			slackNotificationsEnabled
-			sesSourceEmail
-			sesSourceArn
-			slackToken
-			teamAdminGroup
-			teamAuditorGroup
-			createdAt
-			updatedAt
-		}
-	}	
-	`, id)
+	q := getSettingsQuery
+	if client.SettingsCapabilities.UseOUCacheSupported {
+		q = getSettingsQueryWithOUCache
+	}
 
-	raw, err := client.GraphClient.ExecRaw(ctx, q, nil)
+	vars := map[string]interface{}{"id": id}
 
+	raw, err := client.GraphClient.ExecRaw(ctx, q, vars)
 	if err != nil {
 		return nil, err
 	}
 
 	err = json.Unmarshal(raw, out)
-
 	if err != nil {
 		return nil, err
 	}

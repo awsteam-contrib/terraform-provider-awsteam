@@ -101,7 +101,11 @@ func (p *AWSTEAMProvider) Configure(ctx context.Context, req provider.ConfigureR
 
 	config.Build(ctx)
 
-	meta := config.NewClient(ctx)
+	meta, err := config.NewClient(ctx)
+	if err != nil {
+		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to create AWSTEAM client: %s", err))
+		return
+	}
 
 	resp.DataSourceData = meta
 	resp.ResourceData = meta
