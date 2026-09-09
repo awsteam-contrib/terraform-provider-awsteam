@@ -50,6 +50,8 @@ resource "awsteam_approvers_ou" "example" {
 
 Import is supported using the following syntax:
 
+The [`terraform import` command](https://developer.hashicorp.com/terraform/cli/commands/import) can be used, for example:
+
 ```shell
 # Import using AWS OU Id
 terraform import awsteam_approvers_ou.example ou-cxt3-2782ty5g

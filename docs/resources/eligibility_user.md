@@ -4,7 +4,7 @@ page_title: "awsteam_eligibility_user Resource - terraform-provider-awsteam"
 subcategory: ""
 description: |-
   Allows configuration of eligibility policies for an aws iam identity center user account within an AWS TEAM deployment.
-  > NOTE: The ous and accounts fields are labeled as Optional; however, at least one ou or account must be provided.
+  **NOTE:** The `ous` and `accounts` fields are labeled as *Optional*; however, at least one `ou` or `account` must be provided.
 ---
 
 # awsteam_eligibility_user (Resource)
@@ -94,6 +94,8 @@ Required:
 ## Import
 
 Import is supported using the following syntax:
+
+The [`terraform import` command](https://developer.hashicorp.com/terraform/cli/commands/import) can be used, for example:
 
 ```shell
 # Import using id
