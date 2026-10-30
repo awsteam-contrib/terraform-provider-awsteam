@@ -232,7 +232,9 @@ func (r *SettingsResource) Create(ctx context.Context, req resource.CreateReques
 		return
 	}
 
+	slackToken := data.SlackToken
 	data.flatten(out.Settings)
+	data.SlackToken = slackToken
 	tflog.Trace(ctx, "created settings resource")
 
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
@@ -268,7 +270,11 @@ func (r *SettingsResource) Read(ctx context.Context, req resource.ReadRequest, r
 		return
 	}
 
+	slackToken := data.SlackToken
 	data.flatten(out.Settings)
+	if out.Settings.SlackToken == nil {
+		data.SlackToken = slackToken
+	}
 	tflog.Trace(ctx, "read settings resource")
 
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
@@ -339,7 +345,9 @@ func (r *SettingsResource) Update(ctx context.Context, req resource.UpdateReques
 			return
 		}
 
+		slackToken := plan.SlackToken
 		plan.flatten(out.Settings)
+		plan.SlackToken = slackToken
 
 		tflog.Trace(ctx, "updated settings resource")
 
