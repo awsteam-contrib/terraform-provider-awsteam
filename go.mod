@@ -3,7 +3,7 @@ module github.com/awsteam-contrib/terraform-provider-awsteam
 go 1.26.0
 
 require (
-	github.com/YakDriver/regexache v0.25.0
+	github.com/YakDriver/regexache v0.26.0
 	github.com/aws/smithy-go v1.28.1
 	github.com/brianvoe/gofakeit/v6 v6.28.0
 	github.com/hashicorp/go-changelog v0.0.0-20230630083008-522d403eacf1
